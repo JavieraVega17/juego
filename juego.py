@@ -8,7 +8,9 @@ ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VEN
 
 pygame.display.set_caption("Juego 0.0")
 
-jugador = Personaje(x=50, y=50)
+player_image = pygame.image.load("assets/images/characters/player/Derecha1.png")
+
+jugador = Personaje(x=50, y=50, imagen = player_image)
 
 #variables del movimiento del jugador
 mover_arriba = False
