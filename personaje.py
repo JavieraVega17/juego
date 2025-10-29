@@ -14,6 +14,6 @@ class Personaje():
 
     def dibujar(self, interfaz):
         interfaz.blit(self.image, self.forma)
-        pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.forma)
+        #pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.forma, width=1)
 
     
