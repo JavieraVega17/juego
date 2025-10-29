@@ -10,7 +10,7 @@ pygame.display.set_caption("Juego 0.0")
 
 player_image = pygame.image.load("assets/images/characters/player/Derecha1.png")
 
-jugador = Personaje(x=50, y=50, imagen = player_image)
+jugador = Personaje(x=50, y=50, image = player_image)
 
 #variables del movimiento del jugador
 mover_arriba = False
