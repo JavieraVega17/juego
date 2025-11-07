@@ -8,9 +8,19 @@ ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VEN
 
 pygame.display.set_caption("Juego 0.0")
 
-player_image = pygame.image.load("assets/images/characters/player/Derecha1.png")
-player_image = pygame.transform.scale(player_image, (player_image.get_width()*constantes.SCALA_PERSONAJE,
-                                                     player_image.get_height()*constantes.SCALA_PERSONAJE))
+def escalar_img(image, scale):
+    w = image.get_width()
+    h = image.get_height()
+    nueva_imagen = pygame.transform.scale(image, size= (w*scale, h*scale))
+    return nueva_imagen
+
+animaciones = []
+for i in range (3):
+    img = pygame.image.load(f"assets/images/characters/player/Derecha{i}.png")
+
+player_image = pygame.image.load("assets/images/characters/player/Derecha0.png")
+player_image = escalar_img(player_image, constantes.SCALA_PERSONAJE)
+
 
 jugador = Personaje(x=50, y=50, image = player_image)
 
