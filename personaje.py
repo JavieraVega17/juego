@@ -2,9 +2,13 @@ import pygame
 import constantes
 
 class Personaje():
-    def __init__(self, x, y, image):
-        self.flip = False
-        self.image = image 
+    def __init__(self, x, y, animaciones):
+        self.flip = False 
+        self.animaciones = animaciones
+        #imagen de la animación que se muestra
+        self.frame_index = 0
+        self.update_time = pygame.time.get_ticks()
+        self.image = animaciones [self.frame_index]
         self.forma = pygame.Rect(0, 0, constantes.ANCHO_PERSONAJE, constantes.ALTO_PERSONAJE)
 
         self.forma.center = (x, y)
