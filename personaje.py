@@ -2,41 +2,31 @@ import pygame
 import constantes
 
 class Personaje():
-    def __init__(self, x, y, animaciones):
-        self.flip = False 
-        self.animaciones = animaciones
-        #imagen de la animación que se muestra
-        self.frame_index = 0
-        self.update_time = pygame.time.get_ticks()
-        self.image = animaciones [self.frame_index]
-        self.forma = pygame.Rect(0, 0, constantes.ANCHO_PERSONAJE, constantes.ALTO_PERSONAJE)
+    
+     def __init__(self, x, y, animaciones):
+        self.x = x
+        self.y = y
+        self.animaciones = animaciones  # Lista de imágenes ya escaladas
+        self.frame = 0                   # <-- Aquí defines 'frame'
+        self.image = self.animaciones[self.frame]
+        self.rect = self.image.get_rect(topleft=(x, y))
+        self.contador_anim = 0           # Controla la velocidad de animación
 
-        self.forma.center = (x, y)
+     def movimiento(self, dx, dy):
+        self.rect.x += dx
+        self.rect.y += dy
 
-    def movimiento(self, delta_x, delta_y):
-            
-            if delta_x < 0:
-                 self.flip = True
-            elif delta_x > 0:
-                 self.flip = False
+     def update(self):
+        # Actualizar animación
+        self.contador_anim += 1
+        if self.contador_anim >= 10:  # Cambia de frame cada 10 ticks
+            self.contador_anim = 0
+            self.frame += 1
+            if self.frame >= len(self.animaciones):
+                self.frame = 0
+            self.image = self.animaciones[self.frame]
 
-            self.forma.x += delta_x
-            self.forma.y += delta_y
-
-
-    def update(self):
-         cooldown_animacion = 500
-         self.image = self.animaciones[self.frame_index]
-         if pygame.time.get_ticks() - self.update_time >= cooldown_animacion:
-              self.frame_index += 1
-              self.update_time = pygame.time.get_ticks()
-
-              if self.frame_index >= len(self.animaciones):
-                   self.frame_index = 0
-
-    def dibujar(self, interfaz):
-        imagen_flip = pygame.transform.flip(self.image, self.flip, flip_y= False)
-        interfaz.blit(imagen_flip, self.forma)
-        #pygame.draw.rect(interfaz, constantes.COLOR_PERSONAJE, self.forma, width=1)
+     def dibujar(self, superficie):
+        superficie.blit(self.image, self.rect)
 
     
