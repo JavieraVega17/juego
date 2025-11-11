@@ -20,7 +20,7 @@ for i in range (3):
     img = escalar_img(img, constantes.SCALA_PERSONAJE)
     animaciones.append(img)
 
-jugador = Personaje(x=50, y=50, image = animaciones)
+jugador = Personaje(x=50, y=50, animaciones = animaciones)
 
 #variables del movimiento del jugador
 mover_arriba = False
@@ -52,6 +52,8 @@ while run == True:
 
     #mover jugador
     jugador.movimiento(delta_x, delta_y)
+
+    jugador.update()
 
     jugador.dibujar(ventana)
 
