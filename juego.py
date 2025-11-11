@@ -11,14 +11,15 @@ pygame.display.set_caption("Juego 0.0")
 def escalar_img(image, scale):
     w = image.get_width()
     h = image.get_height()
-    nueva_imagen = pygame.transform.scale(image, size= (w*scale, h*scale))
+    nueva_imagen = pygame.transform.scale(image, size= (170*scale, 170*scale))
     return nueva_imagen
 
 animaciones = []
 for i in range (3):
-    img = pygame.image.load(f"assets/images/characters/player/Derecha{i}.png")
+    img = pygame.image.load(f"assets/images/characters/player/Derecha{i}.png").convert_alpha()
     img = escalar_img(img, constantes.SCALA_PERSONAJE)
     animaciones.append(img)
+
 
 jugador = Personaje(x=50, y=50, animaciones = animaciones)
 
