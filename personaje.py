@@ -17,19 +17,22 @@ class Personaje():
             
             if delta_x < 0:
                  self.flip = True
-            if delta_y > 0:
+            elif delta_x > 0:
                  self.flip = False
 
-            self.forma.x = self.forma.x + delta_x
-            self.forma.y = self.forma.y + delta_y
+            self.forma.x += delta_x
+            self.forma.y += delta_y
 
 
     def update(self):
-         cooldown_animacion = 100
+         cooldown_animacion = 500
          self.image = self.animaciones[self.frame_index]
          if pygame.time.get_ticks() - self.update_time >= cooldown_animacion:
-              self.frame_index = self.frame_index + 1
+              self.frame_index += 1
               self.update_time = pygame.time.get_ticks()
+
+              if self.frame_index >= len(self.animaciones):
+                   self.frame_index = 0
 
     def dibujar(self, interfaz):
         imagen_flip = pygame.transform.flip(self.image, self.flip, flip_y= False)
