@@ -3,95 +3,75 @@ import constantes
 from personaje import Personaje
 
 pygame.init()
-
 ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
+pygame.display.set_caption("Gato con pulso al caminar")
 
-pygame.display.set_caption("Juego 0.0")
+# Función para escalar imágenes
+def escalar_img(image, scale_or_size):
+    """
+    Escala una imagen.
 
-def escalar_img(image, scale):
-    w = image.get_width()
-    h = image.get_height()
-    nueva_imagen = pygame.transform.scale(image, size= (170*scale, 170*scale))
-    return nueva_imagen
+    Parámetros:
+    - scale_or_size: float (factor de escala) o tuple (ancho, alto) en píxeles.
+    """
+    # Si pasaron un tamaño objetivo (w, h)
+    if isinstance(scale_or_size, (tuple, list)):
+        target_w, target_h = scale_or_size
+        return pygame.transform.scale(image, (int(target_w), int(target_h)))
 
+    # Si pasaron un factor de escala
+    scale = float(scale_or_size)
+    w, h = image.get_size()
+    return pygame.transform.scale(image, (int(w * scale), int(h * scale)))
+
+# Cargar animaciones
 animaciones = []
-for i in range (3):
+for i in range(2):
     img = pygame.image.load(f"assets/images/characters/player/Derecha{i}.png").convert_alpha()
-    img = escalar_img(img, constantes.SCALA_PERSONAJE)
+    # Escalamos cada frame al tamaño definido por las constantes
+    img = escalar_img(img, (constantes.ANCHO_PERSONAJE, constantes.ALTO_PERSONAJE))
     animaciones.append(img)
 
-
-jugador = Personaje(x=50, y=50, animaciones = animaciones)
-
-#variables del movimiento del jugador
-mover_arriba = False
-mover_abajo = False
-mover_izquierda = False
-mover_derecha = False
+jugador = Personaje(50, 50, animaciones)
 
 reloj = pygame.time.Clock()
-
 run = True
-while run == True: 
+direccion_derecha = True
 
-    reloj.tick(constantes.FPS)
-
-    ventana.fill(constantes.COLOR_FONDO)
-
-    #calcular movimiento jugador 
-    delta_x = 0
-    delta_y = 0
-
-    if mover_derecha == True:
-        delta_x = constantes.VELOCIDAD_JUGADOR
-    if mover_izquierda == True:
-        delta_x = -constantes.VELOCIDAD_JUGADOR
-    if mover_arriba == True:
-        delta_y = -constantes.VELOCIDAD_JUGADOR
-    if mover_abajo == True:
-        delta_y = constantes.VELOCIDAD_JUGADOR
-
-    #mover jugador
-    jugador.movimiento(delta_x, delta_y)
-
-    jugador.update()
-
-    jugador.dibujar(ventana)
-
+while run:
+    dt = reloj.tick(constantes.FPS) / 1000
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            run = False 
+            run = False
 
-        #cuando se aprete la tecla
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_a:
-                mover_izquierda = True
+    # Movimiento
+    keys = pygame.key.get_pressed()
+    dx, dy = 0, 0
+    if keys[pygame.K_a]:
+        dx -= 1
+        direccion_derecha = False
+    if keys[pygame.K_d]:
+        dx += 1
+        direccion_derecha = True
+    if keys[pygame.K_w]:
+        dy -= 1
+    if keys[pygame.K_s]:
+        dy += 1
 
-            if event.key == pygame.K_d:
-                mover_derecha = True
+    # Normalizar diagonal
+    if dx != 0 or dy != 0:
+        longitud = (dx**2 + dy**2) ** 0.5
+        dx /= longitud
+        dy /= longitud
 
-            if event.key == pygame.K_w:
-                mover_arriba = True
+    # Mover jugador
+    jugador.movimiento(dx * constantes.VELOCIDAD_JUGADOR * dt * 60,
+                       dy * constantes.VELOCIDAD_JUGADOR * dt * 60)
+    jugador.update()
 
-            if event.key == pygame.K_s:
-                mover_abajo = True
-
-
-        #cuando se suelte la tecla
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_a:
-                        mover_izquierda = False
-
-            if event.key == pygame.K_d:
-                        mover_derecha = False
-
-            if event.key == pygame.K_w:
-                        mover_arriba = False
-
-            if event.key == pygame.K_s:
-                        mover_abajo = False
-
-
-    pygame.display.update()
+    # Dibujar
+    ventana.fill(constantes.COLOR_FONDO)
+    jugador.dibujar(ventana, direccion_derecha)
+    pygame.display.flip()
 
 pygame.quit()
