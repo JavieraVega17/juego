@@ -4,7 +4,7 @@ from personaje import Personaje
 
 pygame.init()
 ventana = pygame.display.set_mode((constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
-pygame.display.set_caption("Gato con pulso al caminar")
+pygame.display.set_caption("Charlie Adventure")
 
 # Función para escalar imágenes
 def escalar_img(image, scale_or_size):
@@ -33,6 +33,13 @@ for i in range(2):
     animaciones.append(img)
 
 jugador = Personaje(50, 50, animaciones)
+
+# Cargar imagen de fondo (opcional). Si no existe, se usará COLOR_FONDO al dibujar.
+try:
+    fondo = pygame.image.load("assets/images/background.png").convert()
+    fondo = escalar_img(fondo, (constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
+except Exception:
+    fondo = None
 
 reloj = pygame.time.Clock()
 run = True
