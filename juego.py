@@ -34,14 +34,18 @@ for i in range(2):
 
 jugador = Personaje(50, 50, animaciones)
 
-# Cargar imagen de fondo (opcional). Si no existe, se usará COLOR_FONDO al dibujar.
-try:
-    fondo = pygame.image.load("assets/images/background.png").convert()
-    fondo = escalar_img(fondo, (constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
-except Exception:
-    fondo = None
+# Cargar imagen de fondo (opcional). Primero intenta 'Fondo1.png', luego 'background.png'.
+fondo = None
+for nombre in ("Fondo1.png", "background.png"):
+    try:
+        ruta = f"assets/images/{nombre}"
+        fondo = pygame.image.load(ruta).convert()
+        fondo = escalar_img(fondo, (constantes.ANCHO_VENTANA, constantes.ALTO_VENTANA))
+        break
+    except Exception:
+        fondo = None
 
-reloj = pygame.time.Clock()
+reloj =pygame.time.Clock()
 run = True
 direccion_derecha = True
 
@@ -54,15 +58,16 @@ while run:
     # Movimiento
     keys = pygame.key.get_pressed()
     dx, dy = 0, 0
-    if keys[pygame.K_a]:
+    # Soporta WASD y flechas
+    if keys[pygame.K_a] or keys[pygame.K_LEFT]:
         dx -= 1
         direccion_derecha = False
-    if keys[pygame.K_d]:
+    if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
         dx += 1
         direccion_derecha = True
-    if keys[pygame.K_w]:
+    if keys[pygame.K_w] or keys[pygame.K_UP]:
         dy -= 1
-    if keys[pygame.K_s]:
+    if keys[pygame.K_s] or keys[pygame.K_DOWN]:
         dy += 1
 
     # Normalizar diagonal
@@ -77,7 +82,11 @@ while run:
     jugador.update()
 
     # Dibujar
-    ventana.fill(constantes.COLOR_FONDO)
+    if fondo:
+        ventana.blit(fondo, (0, 0))
+    else:
+        ventana.fill(constantes.COLOR_FONDO)
+
     jugador.dibujar(ventana, direccion_derecha)
     pygame.display.flip()
 
