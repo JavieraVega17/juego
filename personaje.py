@@ -4,17 +4,20 @@ import constantes
 class Personaje():
     
     def __init__(self, x, y, animaciones):
-        self.x = x
-        self.y = y
+        # Guardamos posición en floats para movimiento suave
+        self.x = float(x)
+        self.y = float(y)
         self.animaciones = animaciones  # Lista de imágenes ya escaladas
         self.frame = 0
         self.image = self.animaciones[self.frame]
-        self.rect = self.image.get_rect(topleft=(x, y))
+        self.rect = self.image.get_rect(topleft=(int(self.x), int(self.y)))
         self.contador_anim = 0           # Controla la velocidad de animación
 
     def movimiento(self, dx, dy):
-        self.rect.x += dx
-        self.rect.y += dy
+        # Actualizamos posición en float y luego el rect (para evitar pérdida por truncado)
+        self.x += dx
+        self.y += dy
+        self.rect.topleft = (int(self.x), int(self.y))
 
     def update(self):
         # Actualizar animación
@@ -25,10 +28,9 @@ class Personaje():
             if self.frame >= len(self.animaciones):
                 self.frame = 0
             self.image = self.animaciones[self.frame]
-            # Si la imagen cambió de tamaño, actualizamos el rect para mantener
-            # la posición top-left (self.x, self.y) consistente con la nueva imagen
-            # y para que el blit utilice el tamaño correcto.
-            self.rect = self.image.get_rect(topleft=(self.rect.x, self.rect.y))
+            # Si la imagen cambió de tamaño, recalculamos el rect usando la
+            # posición actual (self.x, self.y) para mantener la ubicación.
+            self.rect = self.image.get_rect(topleft=(int(self.x), int(self.y)))
 
     def dibujar(self, superficie, direccion_derecha=True):
         # Solo volteamos la imagen si es necesario
