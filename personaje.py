@@ -22,7 +22,7 @@ class Personaje():
     def update(self):
         # Actualizar animación
         self.contador_anim += 1
-        if self.contador_anim >= 10:  # Cambia de frame cada 10 ticks
+        if self.contador_anim >= 20:  # Cambia de frame cada 20 ticks
             self.contador_anim = 0
             self.frame += 1
             if self.frame >= len(self.animaciones):
